@@ -39,3 +39,33 @@ export class ApiClient {
     return codeMatch[1];
   }
 }
+
+function decodeHtmlEntities(text: string): string {
+  const entities: Record<string, string> = {
+    "&lt;": "<",
+    "&gt;": ">",
+    "&amp;": "&",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&apos;": "'",
+    "&#x27;": "'",
+    "&#x2F;": "/",
+    "&#x60;": "`",
+    "&#x3D;": "=",
+  };
+
+  let result = text;
+  for (const [entity, char] of Object.entries(entities)) {
+    result = result.replace(new RegExp(entity, "g"), char);
+  }
+
+  result = result.replace(/&#(\d+);/g, (_, code) =>
+    String.fromCharCode(parseInt(code, 10))
+  );
+  result = result.replace(/&#x([0-9a-fA-F]+);/g, (_, code) =>
+    String.fromCharCode(parseInt(code, 16))
+  );
+
+  return result;
+}
+

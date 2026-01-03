@@ -13,5 +13,16 @@ export interface Submission {
 
 export const LANGUAGE_EXTENSIONS: Record<string, string> = {
     // TODO: fill Record
-     "Python (CPython 3.13.7)": ".py", 
+    "C++": ".cpp",
+    "Python": ".py", 
+    "Rust": ".rs",
 };
+
+export function getLanguageExtension(language: string): string {
+    for (const [k, v] of Object.entries(LANGUAGE_EXTENSIONS)) {
+        if (language.startsWith(k)) {
+            return v;
+        }
+    }
+    return ".txt";
+}

@@ -10,3 +10,8 @@ export interface Submission {
     result: string;
     execution_time?: number; 
 }
+
+export const LANGUAGE_EXTENSIONS: Record<string, string> = {
+    // TODO: fill Record
+     "Python (CPython 3.13.7)": ".py", 
+};

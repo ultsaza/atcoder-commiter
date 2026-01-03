@@ -19,4 +19,23 @@ export class ApiClient {
     });
     return response.data;
   }
+
+  async getSubmissionCode(
+    contestId: string,
+    submissionId: number
+  ): Promise<string> {
+    const url = `${ATCODER_BASE_URL}/contests/${contestId}/submissions/${submissionId}`;
+    const response = await axios.get<string>(url, {
+      timeout: 10000,
+    });
+
+    const html = response.data as string;
+    const codeMatch = html.match(
+      /<pre[^>]*id="submission-code"[^>]*>(.*?)<\/pre>/s
+    );
+    if (!codeMatch) {
+      throw new Error("Failed to extract code");
+    }
+    return codeMatch[1];
+  }
 }

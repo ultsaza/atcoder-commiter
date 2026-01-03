@@ -14,6 +14,7 @@
     "@vscode/vsce": "^3.7.1",
     "axios": "^1.13.2",
     "generator-code": "^1.11.15",
+    "octokit": "^5.0.5",
     "typescript": "^5.9.3",
     "yo": "^6.0.0"
   }

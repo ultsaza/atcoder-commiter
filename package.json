@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "@vscode/vsce": "^3.7.1",
+    "axios": "^1.13.2",
     "generator-code": "^1.11.15",
     "typescript": "^5.9.3",
     "yo": "^6.0.0"

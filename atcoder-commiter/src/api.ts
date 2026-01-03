@@ -69,3 +69,4 @@ function decodeHtmlEntities(text: string): string {
   return result;
 }
 
+export const apiClient = new ApiClient();

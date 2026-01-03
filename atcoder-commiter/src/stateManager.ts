@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 const STATE_KEY_LAST_TIMESTAMP = "atcoder-commiter.lastTimestamp";
+const SECRET_KEY_GITHUB_TOKEN = "atcoder-commiter.githubToken";
 
 export class StateManager {
     constructor(private context: vscode.ExtensionContext) {}
@@ -11,5 +12,26 @@ export class StateManager {
 
     async setLastTimestamp(timestamp: number): Promise<void> {
         await this.context.globalState.update(STATE_KEY_LAST_TIMESTAMP, timestamp);
+    }
+
+    getGitHubToken(): string | undefined {
+        return this.context.globalState.get<string>(SECRET_KEY_GITHUB_TOKEN);
+    }
+
+    hasGitHubToken(): boolean {
+        return this.context.globalState.get<boolean>(
+            "atcoder-commiter.hasGitHubToken",
+            false
+        );
+    }
+
+    async setGitHubToken(token: string): Promise<void> {
+        await this.context.secrets.store(SECRET_KEY_GITHUB_TOKEN, token);
+        await this.context.globalState.update("atcoder-commiter.hasGitHubToken", true);
+    }
+
+    async deleteGitHubToken(): Promise<void> {
+        await this.context.secrets.delete(SECRET_KEY_GITHUB_TOKEN);
+        await this.context.globalState.update("atcoder-commiter.hasGitHubToken", false);
     }
 }

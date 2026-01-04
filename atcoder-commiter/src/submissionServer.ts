@@ -35,6 +35,9 @@ export class SubmissionServer {
             throw new Error("GitHub client is not initialized");
         }
         for (const sub of submission) {
+            if (sub.result !== "AC") {
+                continue;
+            }
             try {
                 const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
                 const ext = getLanguageExtension(sub.language);

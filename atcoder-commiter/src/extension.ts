@@ -11,6 +11,16 @@ export function activate(context: vscode.ExtensionContext) {
 
   const stateManager = new StateManager(context);
   const submissionTreeProvider = new SubmissionTreeProvider();
+
+  stateManager.loadGitHubToken();
+
+  const treeView = vscode.window.createTreeView(
+    "atcoder-commiter.submissions",
+    {
+      treeDataProvider: submissionTreeProvider,
+      showCollapseAll: false,
+    }
+  );
 }
 
 export function deactivate() {}

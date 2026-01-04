@@ -207,3 +207,5 @@ async function setGitHubToken(): Promise<void> {
   updateTreeViewState();
   vscode.window.showInformationMessage(`GitHub token updated to ${token}`);
 }
+
+export function deactivate() {}

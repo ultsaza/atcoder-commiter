@@ -112,3 +112,25 @@ async function setRepo(): Promise<void> {
   updateTreeViewState();
   vscode.window.showInformationMessage(`Repository URL updated to ${repoUrl}`);
 }
+
+async function setGitHubToken(): Promise<void> {
+  const config = vscode.workspace.getConfiguration("atcoder-commiter");
+  const currentToken = config.get<string>("githubToken", "");
+
+  const token = await vscode.window.showInputBox({
+    prompt: "Enter your GitHub Personal Access Token",
+    value: currentToken,
+    placeHolder: "Example: ghp_1234567890",
+  });
+  if (!token) {
+    return;
+  }
+
+  await config.update(
+    "githubToken",
+    token.trim(),
+    vscode.ConfigurationTarget.Global
+  );
+  updateTreeViewState();
+  vscode.window.showInformationMessage(`GitHub token updated to ${token}`);
+}

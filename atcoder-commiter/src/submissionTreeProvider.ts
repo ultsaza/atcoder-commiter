@@ -22,7 +22,8 @@ export class SubmissionItem extends vscode.TreeItem {
         Submitted at: ${dateStr}`;
 
     this.iconPath = new vscode.ThemeIcon(
-        "check",
-        new vscode.ThemeColor("testing.iconPassed")
+      "check",
+      new vscode.ThemeColor("testing.iconPassed")
     );
+  }
 }

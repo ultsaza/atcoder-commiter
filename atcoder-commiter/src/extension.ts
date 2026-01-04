@@ -4,7 +4,6 @@ import { StateManager } from "./stateManager";
 import { SubmissionServer } from "./submissionServer";
 import { SubmissionTreeProvider } from "./submissionTreeProvider";
 
-
 let stateManager: StateManager;
 let submissionTreeProvider: SubmissionTreeProvider;
 
@@ -28,9 +27,15 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function updateTreeViewState(): void {
-	const config = vscode.workspace.getConfiguration("atcoder-commiter");
-	const username = config.get<string>("username");
-	const lastTimestamp = config.get<number>("lastTimestamp");
-	const repoUrl = stateManager.getRepoUrl();
-	const hasGitHubToken = 
+  const config = vscode.workspace.getConfiguration("atcoder-commiter");
+  const username = config.get<string>("username", "");
+  const repoUrl = config.get<string>("repoUrl", "");
+  const lastTimestamp = stateManager.getLastTimestamp();
+  const hasGitHubToken = stateManager.hasGitHubToken();
+  submissionTreeProvider.updateState(
+    username,
+    lastTimestamp,
+    repoUrl,
+    hasGitHubToken
+  );
 }

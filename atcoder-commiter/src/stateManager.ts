@@ -17,7 +17,7 @@ export class StateManager {
   }
 
   getGitHubToken(): string | undefined {
-    return this.context.globalState.get<string>(SECRET_KEY_GITHUB_TOKEN);
+    return this.context.globalState.get<string>(STATE_KEY_CACHED_TOKEN);
   }
 
   hasGitHubToken(): boolean {

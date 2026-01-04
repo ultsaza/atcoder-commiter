@@ -37,7 +37,7 @@ export class GitHubClient {
             ref: branch
         });
 
-        if (!Array.isArray(response.data) && response.dateta.type === "file") {
+        if (!Array.isArray(response.data) && response.data.type === "file") {
             return response.data.sha;
         }
         return null;
@@ -48,4 +48,5 @@ export class GitHubClient {
         throw error;
     }
   }
+
 }

@@ -142,3 +142,7 @@ vite.config.ts.timestamp-*
 
 # direnv
 /.direnv
+
+# vsix
+*.vsix
+

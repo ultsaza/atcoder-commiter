@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { FILE } from "dns";
 import { StringLiteral } from "typescript";
 
 export class GitHubClient {
@@ -131,5 +132,13 @@ export class GitHubClient {
         }
         throw error;
     }
+
+    const FILE_MODE = "100644";
+    const treeItems: Array<{
+        path: string;
+        mode: string;
+        type: "blob";
+        sha: string;
+    }> = [];
   }
 }

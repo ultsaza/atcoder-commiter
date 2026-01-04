@@ -78,23 +78,40 @@ async function refreshSubmissions(): Promise<void> {
       cancellable: false,
     },
     async (progress) => {
-      progress.report({ message: "connecting to GitHub..." });
-      const saver = new SubmissionServer();
-      await saver.initGitHubClient(token, repoUrl);
+      try {
+        progress.report({ message: "connecting to GitHub..." });
+        const saver = new SubmissionServer();
+        await saver.initGitHubClient(token, repoUrl);
 
-      progress.report({ message: "Fetching submissions..." });
-      const submissions = await apiClient.getSubmissions(username, fromSecond);
+        progress.report({ message: "Fetching submissions..." });
+        const submissions = await apiClient.getSubmissions(
+          username,
+          fromSecond
+        );
 
-      if (submissions.length === 0) {
-        progress.report({ message: "No new submissions found" });
-        return;
+        if (submissions.length === 0) {
+          progress.report({ message: "No new submissions found" });
+          return;
+        }
+
+        progress.report({ message: "Processing submissions..." });
+
+        submissionTreeProvider.updateSubmissions(submissions);
+
+        await saver.saveSubmissions(submissions, outputDir);
+
+        const lastSubmission = submissions[submissions.length - 1];
+        await stateManager.setLastTimestamp(lastSubmission.epoch_second);
+
+        updateTreeViewState();
+
+        vscode.window.showInformationMessage(
+          "Submissions refreshed successfully"
+        );
+      } catch (error) {
+        console.error("Failed to refresh submissions:", error);
+        vscode.window.showErrorMessage("Failed to refresh submissions");
       }
-
-      progress.report({ message: "Processing submissions..." });
-
-      submissionTreeProvider.updateSubmissions(submissions);
-
-      await saver.saveSubmissions(submissions, outputDir);
     }
   );
 }

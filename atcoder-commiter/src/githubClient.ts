@@ -95,4 +95,41 @@ export class GitHubClient {
         url: response.data.content!.html_url || "",
     };
   }
+
+  async createCommit(
+    files: Array<{ path: string; content: string }>,
+    message: string,
+    options?: {
+        branch?: string;
+        authorName?: string;
+        authorEmail?: string;
+        authorDate?: string;
+    }
+  ): Promise<{ sha: string}> {
+    const branch = options?.branch || "main";
+
+    let latestCommitSHA: string;
+    let baseTreeSHA: string;
+
+    try {
+        const refResponse = await this.octokit.rest.git.getRef({
+            owner: this.owner,
+            repo: this.repo,
+            ref: `heads/${branch}`,
+        });
+        latestCommitSHA = refResponse.data.object.sha;
+        
+        const commitResponse = await this.octokit.rest.git.getCommit({
+            owner: this.owner,
+            repo: this.repo,
+            commit_sha: latestCommitSHA,
+        });
+        baseTreeSHA = commitResponse.data.tree.sha;
+    } catch (error: any) {
+        if (error.status === 404) {
+            throw new Error(`Branch ${branch} does not exist.`);
+        }
+        throw error;
+    }
+  }
 }

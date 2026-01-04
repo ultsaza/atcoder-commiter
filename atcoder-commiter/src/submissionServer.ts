@@ -49,9 +49,11 @@ export class SubmissionServer {
         const filePath = outputDir ? `${outputDir}/${basePath}` : basePath;
 
         const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
-        await this.githubClient.createOrUpdateFile(
-          filePath,
-          code,
+
+        // Use createCommit which uses the low-level Git Data API
+        // This properly supports custom commit timestamps
+        await this.githubClient.createCommit(
+          [{ path: filePath, content: code }],
           commitMessage,
           {
             branch: this.defaultBranch || undefined,

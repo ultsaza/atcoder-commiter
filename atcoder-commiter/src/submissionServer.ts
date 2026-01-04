@@ -41,6 +41,7 @@ export class SubmissionServer {
                 const ext = getLanguageExtension(sub.language);
                 const dateStr = formatDate(sub.epoch_second);
                 const fileName = `${sub.problem_id}_${dateStr}${ext}`;
+                const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
             }     
         }
     }

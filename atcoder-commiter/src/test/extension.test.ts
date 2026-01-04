@@ -1,15 +1,83 @@
-import * as assert from 'assert';
+import * as assert from "assert";
+import * as vscode from "vscode";
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+suite("Extension Test Suite", () => {
+  vscode.window.showInformationMessage("Start all tests.");
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+  test("Extension should be present", () => {
+    const extension = vscode.extensions.getExtension(
+      "ultsaza.atcoder-commiter"
+    );
+    assert.ok(extension, "Extension should be defined");
+  });
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
+  test("Extension should activate", async () => {
+    const extension = vscode.extensions.getExtension(
+      "ultsaza.atcoder-commiter"
+    );
+    if (extension) {
+      await extension.activate();
+      assert.ok(
+        extension.isActive,
+        "Extension should be active after activation"
+      );
+    }
+  });
+
+  suite("Commands", () => {
+    test("refresh command should be registered", async () => {
+      const commands = await vscode.commands.getCommands(true);
+      assert.ok(
+        commands.includes("atcoder-commiter.refresh"),
+        "refresh command should be registered"
+      );
+    });
+
+    test("setUsername command should be registered", async () => {
+      const commands = await vscode.commands.getCommands(true);
+      assert.ok(
+        commands.includes("atcoder-commiter.setUsername"),
+        "setUsername command should be registered"
+      );
+    });
+
+    test("setRepo command should be registered", async () => {
+      const commands = await vscode.commands.getCommands(true);
+      assert.ok(
+        commands.includes("atcoder-commiter.setRepo"),
+        "setRepo command should be registered"
+      );
+    });
+
+    test("setGitHubToken command should be registered", async () => {
+      const commands = await vscode.commands.getCommands(true);
+      assert.ok(
+        commands.includes("atcoder-commiter.setGitHubToken"),
+        "setGitHubToken command should be registered"
+      );
+    });
+  });
+
+  suite("Configuration", () => {
+    test("username configuration should exist", () => {
+      const config = vscode.workspace.getConfiguration("atcoder-commiter");
+      const username = config.get<string>("username");
+      assert.ok(username !== undefined, "username config should be accessible");
+    });
+
+    test("repoUrl configuration should exist", () => {
+      const config = vscode.workspace.getConfiguration("atcoder-commiter");
+      const repoUrl = config.get<string>("repoUrl");
+      assert.ok(repoUrl !== undefined, "repoUrl config should be accessible");
+    });
+
+    test("outputDir configuration should exist", () => {
+      const config = vscode.workspace.getConfiguration("atcoder-commiter");
+      const outputDir = config.get<string>("outputDir");
+      assert.ok(
+        outputDir !== undefined,
+        "outputDir config should be accessible"
+      );
+    });
+  });
 });

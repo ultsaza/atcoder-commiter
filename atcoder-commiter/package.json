@@ -34,10 +34,16 @@
     "viewsWelcome": [
       {
         "view": "atcoder-commiter.submissions",
-        "contents": "Welcome to AtCoder Commiter!\n\n[Set AtCoder Username](command:atcoder-commiter.setUsername)\n[Set Repository URL](command:atcoder-commiter.setRepo)\n[Set GitHub Token](command:atcoder-commiter.setGitHubToken)\n\nAfter configuration, click Refresh to fetch submissions.\n[Refresh Submissions](command:atcoder-commiter.refresh)"
+        "contents": "Welcome to AtCoder Commiter!\n\n[Login to GitHub](command:atcoder-commiter.login)\n[Set AtCoder Username](command:atcoder-commiter.setUsername)\n[Select Repository](command:atcoder-commiter.selectRepo)\n\nAfter configuration, click Refresh to fetch submissions.\n[Refresh Submissions](command:atcoder-commiter.refresh)"
       }
     ],
     "commands": [
+      {
+        "command": "atcoder-commiter.login",
+        "title": "Login to GitHub",
+        "category": "AtCoder Commiter",
+        "icon": "$(github)"
+      },
       {
         "command": "atcoder-commiter.refresh",
         "title": "Refresh Submissions",
@@ -50,13 +56,14 @@
         "category": "AtCoder Commiter"
       },
       {
-        "command": "atcoder-commiter.setRepo",
-        "title": "Set Repository URL",
-        "category": "AtCoder Commiter"
+        "command": "atcoder-commiter.selectRepo",
+        "title": "Select Repository",
+        "category": "AtCoder Commiter",
+        "icon": "$(repo)"
       },
       {
-        "command": "atcoder-commiter.setGitHubToken",
-        "title": "Set GitHub Token",
+        "command": "atcoder-commiter.resetTimestamp",
+        "title": "Reset Timestamp",
         "category": "AtCoder Commiter"
       }
     ],
@@ -64,6 +71,11 @@
       "view/title": [
         {
           "command": "atcoder-commiter.refresh",
+          "when": "view == atcoder-commiter.submissions",
+          "group": "navigation"
+        },
+        {
+          "command": "atcoder-commiter.login",
           "when": "view == atcoder-commiter.submissions",
           "group": "navigation"
         }
@@ -77,11 +89,6 @@
           "default": "",
           "description": "Your AtCoder username"
         },
-        "atcoder-commiter.repoUrl": {
-          "type": "string",
-          "default": "",
-          "description": "GitHub repository URL for saving submissions (e.g., https://github.com/username/atcoder-archive)"
-        },
         "atcoder-commiter.outputDir": {
           "type": "string",
           "default": "",
@@ -90,6 +97,9 @@
       }
     }
   },
+  "extensionDependencies": [
+    "vscode.github-authentication"
+  ],
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && npm run lint && node esbuild.js",

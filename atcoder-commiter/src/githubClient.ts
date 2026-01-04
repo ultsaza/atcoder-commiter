@@ -1,4 +1,13 @@
 import { Octokit } from "@octokit/rest";
+
+export interface Repository {
+  name: string;
+  full_name: string;
+  html_url: string;
+  description: string | null;
+  private: boolean;
+}
+
 export class GitHubClient {
   private octokit: Octokit;
   private owner: string;
@@ -11,6 +20,66 @@ export class GitHubClient {
     });
     this.owner = owner;
     this.repo = repo;
+  }
+
+  /**
+   * Fetch repositories accessible by the authenticated user
+   */
+  static async fetchUserRepositories(token: string): Promise<Repository[]> {
+    const octokit = new Octokit({
+      auth: token,
+      userAgent: "atcoder-commiter-vscode-extension/1.0.0",
+    });
+
+    const repos: Repository[] = [];
+    let page = 1;
+    const perPage = 100;
+
+    // Fetch up to 300 repositories (3 pages)
+    while (page <= 3) {
+      const response = await octokit.repos.listForAuthenticatedUser({
+        visibility: "all",
+        affiliation: "owner,collaborator,organization_member",
+        sort: "updated",
+        per_page: perPage,
+        page,
+      });
+
+      repos.push(
+        ...response.data.map((repo) => ({
+          name: repo.name,
+          full_name: repo.full_name,
+          html_url: repo.html_url,
+          description: repo.description,
+          private: repo.private,
+        }))
+      );
+
+      if (response.data.length < perPage) {
+        break;
+      }
+      page++;
+    }
+
+    return repos;
+  }
+
+  /**
+   * Get authenticated user info
+   */
+  static async getAuthenticatedUser(
+    token: string
+  ): Promise<{ login: string; name: string | null }> {
+    const octokit = new Octokit({
+      auth: token,
+      userAgent: "atcoder-commiter-vscode-extension/1.0.0",
+    });
+
+    const response = await octokit.users.getAuthenticated();
+    return {
+      login: response.data.login,
+      name: response.data.name,
+    };
   }
 
   static parseRepoUrl(url: string): { owner: string; repo: string } | null {

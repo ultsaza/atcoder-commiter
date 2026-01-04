@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
 
 const STATE_KEY_LAST_TIMESTAMP = "atcoder-commiter.lastTimestamp";
-const SECRET_KEY_GITHUB_TOKEN = "atcoder-commiter.githubToken";
-const STATE_KEY_HAS_GITHUB_TOKEN = "atcoder-commiter.hasGitHubToken";
-const STATE_KEY_CACHED_TOKEN = "atcoder-commiter.cachedToken";
+const STATE_KEY_SELECTED_REPO = "atcoder-commiter.selectedRepo";
+
+// GitHub OAuth scopes needed for repository access
+const GITHUB_SCOPES = ["repo"];
 
 export class StateManager {
   constructor(private context: vscode.ExtensionContext) {}
@@ -16,38 +17,59 @@ export class StateManager {
     await this.context.globalState.update(STATE_KEY_LAST_TIMESTAMP, timestamp);
   }
 
-  getGitHubToken(): string | undefined {
-    return this.context.globalState.get<string>(STATE_KEY_CACHED_TOKEN);
+  async resetTimestamp(): Promise<void> {
+    await this.context.globalState.update(STATE_KEY_LAST_TIMESTAMP, 0);
   }
 
-  hasGitHubToken(): boolean {
-    return this.context.globalState.get<boolean>(
-      STATE_KEY_HAS_GITHUB_TOKEN,
-      false
-    );
-  }
-
-  async setGitHubToken(token: string): Promise<void> {
-    await this.context.secrets.store(SECRET_KEY_GITHUB_TOKEN, token);
-    await this.context.globalState.update(STATE_KEY_HAS_GITHUB_TOKEN, true);
-    await this.context.globalState.update(STATE_KEY_CACHED_TOKEN, token);
-  }
-
-  async deleteGitHubToken(): Promise<void> {
-    await this.context.secrets.delete(SECRET_KEY_GITHUB_TOKEN);
-    await this.context.globalState.update(STATE_KEY_HAS_GITHUB_TOKEN, false);
-    await this.context.globalState.update(STATE_KEY_CACHED_TOKEN, undefined);
-  }
-
-  async loadGitHubToken(): Promise<void> {
-    const token = await this.context.secrets.get(SECRET_KEY_GITHUB_TOKEN);
-    if (token) {
-      await this.context.globalState.update(STATE_KEY_CACHED_TOKEN, token);
-      await this.context.globalState.update(STATE_KEY_HAS_GITHUB_TOKEN, true);
+  // GitHub OAuth Authentication
+  async getGitHubSession(
+    createIfNone: boolean = false
+  ): Promise<vscode.AuthenticationSession | undefined> {
+    try {
+      const session = await vscode.authentication.getSession(
+        "github",
+        GITHUB_SCOPES,
+        { createIfNone }
+      );
+      return session;
+    } catch (error) {
+      console.error("Failed to get GitHub session:", error);
+      return undefined;
     }
   }
 
-  async resetTimestamp(): Promise<void> {
-    await this.context.globalState.update(STATE_KEY_LAST_TIMESTAMP, 0);
+  async getGitHubToken(): Promise<string | undefined> {
+    const session = await this.getGitHubSession(false);
+    return session?.accessToken;
+  }
+
+  async hasGitHubSession(): Promise<boolean> {
+    const session = await this.getGitHubSession(false);
+    return session !== undefined;
+  }
+
+  async loginToGitHub(): Promise<vscode.AuthenticationSession | undefined> {
+    return this.getGitHubSession(true);
+  }
+
+  async logoutFromGitHub(): Promise<void> {
+    // Note: VS Code doesn't provide a direct logout API for authentication providers
+    // The user needs to manage sessions through VS Code's account menu
+    vscode.window.showInformationMessage(
+      "To logout from GitHub, use the account menu in the bottom-left of VS Code."
+    );
+  }
+
+  // Repository selection
+  getSelectedRepo(): string | undefined {
+    return this.context.globalState.get<string>(STATE_KEY_SELECTED_REPO);
+  }
+
+  async setSelectedRepo(repoUrl: string): Promise<void> {
+    await this.context.globalState.update(STATE_KEY_SELECTED_REPO, repoUrl);
+  }
+
+  async clearSelectedRepo(): Promise<void> {
+    await this.context.globalState.update(STATE_KEY_SELECTED_REPO, undefined);
   }
 }

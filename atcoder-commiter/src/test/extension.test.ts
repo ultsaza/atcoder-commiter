@@ -41,19 +41,27 @@ suite("Extension Test Suite", () => {
       );
     });
 
-    test("setRepo command should be registered", async () => {
+    test("selectRepo command should be registered", async () => {
       const commands = await vscode.commands.getCommands(true);
       assert.ok(
-        commands.includes("atcoder-commiter.setRepo"),
-        "setRepo command should be registered"
+        commands.includes("atcoder-commiter.selectRepo"),
+        "selectRepo command should be registered"
       );
     });
 
-    test("setGitHubToken command should be registered", async () => {
+    test("login command should be registered", async () => {
       const commands = await vscode.commands.getCommands(true);
       assert.ok(
-        commands.includes("atcoder-commiter.setGitHubToken"),
-        "setGitHubToken command should be registered"
+        commands.includes("atcoder-commiter.login"),
+        "login command should be registered"
+      );
+    });
+
+    test("resetTimestamp command should be registered", async () => {
+      const commands = await vscode.commands.getCommands(true);
+      assert.ok(
+        commands.includes("atcoder-commiter.resetTimestamp"),
+        "resetTimestamp command should be registered"
       );
     });
   });
@@ -63,12 +71,6 @@ suite("Extension Test Suite", () => {
       const config = vscode.workspace.getConfiguration("atcoder-commiter");
       const username = config.get<string>("username");
       assert.ok(username !== undefined, "username config should be accessible");
-    });
-
-    test("repoUrl configuration should exist", () => {
-      const config = vscode.workspace.getConfiguration("atcoder-commiter");
-      const repoUrl = config.get<string>("repoUrl");
-      assert.ok(repoUrl !== undefined, "repoUrl config should be accessible");
     });
 
     test("outputDir configuration should exist", () => {

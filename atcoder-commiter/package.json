@@ -65,11 +65,13 @@
         "title": "Select Repository",
         "category": "AtCoder Commiter",
         "icon": "$(repo)"
-      },
+      }
+    ],
+    "submenus": [
       {
-        "command": "atcoder-commiter.resetTimestamp",
-        "title": "Reset Timestamp",
-        "category": "AtCoder Commiter"
+        "id": "atcoder-commiter.settings",
+        "label": "Settings",
+        "icon": "$(gear)"
       }
     ],
     "menus": {
@@ -77,12 +79,31 @@
         {
           "command": "atcoder-commiter.refresh",
           "when": "view == atcoder-commiter.submissions",
-          "group": "navigation"
+          "group": "navigation@1"
         },
         {
           "command": "atcoder-commiter.login",
           "when": "view == atcoder-commiter.submissions",
-          "group": "navigation"
+          "group": "navigation@2"
+        },
+        {
+          "submenu": "atcoder-commiter.settings",
+          "when": "view == atcoder-commiter.submissions",
+          "group": "navigation@3"
+        }
+      ],
+      "atcoder-commiter.settings": [
+        {
+          "command": "atcoder-commiter.setUsername",
+          "group": "1_settings@1"
+        },
+        {
+          "command": "atcoder-commiter.selectRepo",
+          "group": "1_settings@2"
+        },
+        {
+          "command": "atcoder-commiter.resetTimestamp",
+          "group": "2_actions@1"
         }
       ]
     },

@@ -46,28 +46,52 @@ async function refreshSubmissions(): Promise<void> {
   const repoUrl = config.get<string>("repoUrl", "");
 
   if (!username) {
-    vscode.window.showInformationMessage("Please set your AtCoder username");
+    vscode.window.showWarningMessage("Please set your AtCoder username");
+
+    await setUsername();
     return;
   }
 
   if (!repoUrl) {
-    vscode.window.showInformationMessage("Please set your repository URL");
+    vscode.window.showWarningMessage("Please set your repository URL");
+
+    await setRepo();
     return;
   }
 
-  if (!stateManager.hasGitHubToken()) {
-    vscode.window.showInformationMessage("Please set your GitHub token");
+  const token = stateManager.getGitHubToken();
+  if (!token) {
+    vscode.window.showWarningMessage("Please set your GitHub token");
+
+    await setGitHubToken();
     return;
   }
 
-  const submissions = await apiClient.getSubmissions(
-    username,
-    stateManager.getLastTimestamp()
+  const outputDir = config.get<string>("outputDir", "");
+
+  const fromSecond = stateManager.getLastTimestamp();
+
+  await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: "Refreshing submissions...",
+      cancellable: false,
+    },
+    async (progress) => {
+      progress.report({ message: "connecting to GitHub..." });
+      const saver = new SubmissionServer();
+      await saver.initGitHubClient(token, repoUrl);
+
+      progress.report({ message: "Fetching submissions..." });
+      const submissions = await apiClient.getSubmissions(username, fromSecond);
+
+      if (submissions.length === 0) {
+        progress.report({ message: "No new submissions found" });
+        return;
+      }
+      progress.report({ message: "Processing submissions..." });
+    }
   );
-  stateManager.setLastTimestamp(
-    submissions[submissions.length - 1].epoch_second
-  );
-  submissionTreeProvider.updateSubmissions(submissions);
 }
 
 async function setUsername(): Promise<void> {

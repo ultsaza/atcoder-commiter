@@ -24,6 +24,33 @@ export function activate(context: vscode.ExtensionContext) {
       showCollapseAll: false,
     }
   );
+
+  updateTreeViewState();
+
+  const refreshCommand = vscode.commands.registerCommand(
+    "atcoder-commiter.refresh",
+    refreshSubmissions
+  );
+
+  const setUsernameCommand = vscode.commands.registerCommand(
+    "atcoder-commiter.setUsername",
+    setUsername
+  );
+
+  const setRepoCommand = vscode.commands.registerCommand(
+    "atcoder-commiter.setRepo",
+    setRepo
+  );
+
+  const setGitHubTokenCommand = vscode.commands.registerCommand(
+    "atcoder-commiter.setGitHubToken",
+    setGitHubToken
+  );
+
+  context.subscriptions.push(refreshCommand);
+  context.subscriptions.push(setUsernameCommand);
+  context.subscriptions.push(setRepoCommand);
+  context.subscriptions.push(setGitHubTokenCommand);
 }
 
 function updateTreeViewState(): void {

@@ -140,5 +140,22 @@ export class GitHubClient {
         type: "blob";
         sha: string;
     }> = [];
+
+    for (const file of files) {
+        const blobResponse = await this.octokit.rest.git.createBlob({
+            owner: this.owner,
+            repo: this.repo,
+            content: Buffer.from(file.content, "utf-8").toString("base64"),
+            encoding: "base64",
+        });
+
+        treeItems.push({
+            path: file.path,
+            mode: FILE_MODE,
+            type: "blob",
+            sha: blobResponse.data.sha,
+        });
+
+    }
   }
 }

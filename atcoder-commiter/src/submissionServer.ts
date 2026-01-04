@@ -39,9 +39,12 @@ export class SubmissionServer {
             try {
                 const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
                 const ext = getLanguageExtension(sub.language);
-                const dateStr = formatDate(sub.epoch_second);
-                const fileName = `${sub.problem_id}_${dateStr}${ext}`;
+                const fileName = `${sub.problem_id}${ext}`;
                 const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
+
+                const date = new Date(sub.epoch_second * 1000);
+                const dateStr = date.toISOString().slice(0, 19).replace("T", " ");
+                const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
             }     
         }
     }

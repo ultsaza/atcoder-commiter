@@ -43,4 +43,44 @@ export class SubmissionTreeProvider
   private username: string = "";
   private repoUrl: string = "";
   private hasGitHubToken: boolean = false;
+
+  updateSubmissions(submissions: Submission[]) {
+    this.submissions = submissions;
+    this._onDidChangeTreeData.fire();
+  }
+
+  updateState(
+    username: string,
+    lastTimestamp: number,
+    repoUrl: string,
+    hasGitHubToken: boolean
+  ) {
+    this.username = username;
+    this.lastTimestamp = lastTimestamp;
+    this.repoUrl = repoUrl;
+    this.hasGitHubToken = hasGitHubToken;
+    this._onDidChangeTreeData.fire();
+  }
+
+  refresh() {
+    this._onDidChangeTreeData.fire();
+  }
+
+  getTreeItem(element: SubmissionItem): vscode.TreeItem {
+    return element;
+  }
+
+  getChildren(
+    element?: SubmissionItem | undefined
+  ): Thenable<SubmissionItem[]> {
+    if (element) {
+      return Promise.resolve([]);
+    }
+    return Promise.resolve(
+      this.submissions.map(
+        (submission) =>
+          new SubmissionItem(submission, vscode.TreeItemCollapsibleState.None)
+      )
+    );
+  }
 }

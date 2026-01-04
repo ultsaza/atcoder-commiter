@@ -48,7 +48,7 @@
         "command": "atcoder-commiter.refresh",
         "title": "Refresh Submissions",
         "category": "AtCoder Commiter",
-        "icon": "$(refresh)"
+        "icon": "$(sync)"
       },
       {
         "command": "atcoder-commiter.resetTimestamp",

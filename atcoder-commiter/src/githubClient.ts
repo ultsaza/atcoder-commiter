@@ -165,5 +165,14 @@ export class GitHubClient {
       base_tree: baseTreeSHA,
       tree: treeItems,
     });
+
+    const commitParams: any = {
+      owner: this.owner,
+      reop: this.repo,
+      message,
+      tree: treeResponse.data.sha,
+      parents: [latestCommitSHA], 
+    };
+    
   }
 }

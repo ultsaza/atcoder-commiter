@@ -27,3 +27,20 @@ export class SubmissionItem extends vscode.TreeItem {
     );
   }
 }
+
+export class SubmissionTreeProvider
+  implements vscode.TreeDataProvider<SubmissionItem>
+{
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    SubmissionItem | undefined | void
+  > = new vscode.EventEmitter<SubmissionItem | undefined | void>();
+  readonly onDidChangeTreeData: vscode.Event<
+    SubmissionItem | undefined | void
+  > = this._onDidChangeTreeData.event;
+
+  private submissions: Submission[] = [];
+  private lastTimestamp: number = 0;
+  private username: string = "";
+  private repoUrl: string = "";
+  private hasGitHubToken: boolean = false;
+}

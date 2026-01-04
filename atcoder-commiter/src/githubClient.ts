@@ -198,5 +198,19 @@ export class GitHubClient {
     return { sha: newCommitResponse.data.sha };
   }
 
-  
+  async checkRepo(): Promise<boolean> {
+    try {
+      await this.octokit.rest.repos.get({
+        owner: this.owner,
+        repo: this.repo,
+      });
+      return true;
+    } catch (error: any) {
+      if (error.status === 404) {
+        return false;
+      }
+      throw error;
+    }
+  }
 }
+

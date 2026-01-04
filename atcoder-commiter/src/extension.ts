@@ -217,7 +217,7 @@ async function refreshSubmissions(): Promise<void> {
         await saver.saveSubmissions(submissions, outputDir);
 
         const lastSubmission = allSubmissions[allSubmissions.length - 1];
-        await stateManager.setLastTimestamp(lastSubmission.epoch_second);
+        await stateManager.setLastTimestamp(lastSubmission.epoch_second + 1);
 
         await updateTreeViewState();
 

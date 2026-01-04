@@ -189,7 +189,14 @@ export class GitHubClient {
       commitParams
     );
 
-    
-
+    await this.octokit.rest.git.updateRef({
+      owner: this.owner,
+      repo: this.repo,
+      ref: `heads/${branch}`,
+      sha: newCommitResponse.data.sha,
+    });
+    return { sha: newCommitResponse.data.sha };
   }
+
+  
 }

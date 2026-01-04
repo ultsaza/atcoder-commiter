@@ -43,8 +43,18 @@ export class SubmissionServer {
                 const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
 
                 const date = new Date(sub.epoch_second * 1000);
-                const dateStr = date.toISOString().slice(0, 19).replace("T", " ");
                 const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
+                await this.githubClient.createOrUpdateFile(
+                    filePath,
+                    code,
+                    commitMessage,
+                    {
+                        branch: this.defaultBranch || undefined,
+                        authorName: "AtCoder Commiter",
+                        authorEmail: "AtCoder-Commiter@user.noreply.github.com",
+                        authorDate: date.toISOString(),
+                    }
+                );
             }     
         }
     }

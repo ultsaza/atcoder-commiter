@@ -212,5 +212,13 @@ export class GitHubClient {
       throw error;
     }
   }
+
+  async getDefaultBranch(): Promise<string> {
+    const response = await this.octokit.rest.repos.get({
+      owner: this.owner,
+      repo: this.repo,
+    });
+    return response.data.default_branch;
+  }
 }
 

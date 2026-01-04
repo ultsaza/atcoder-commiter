@@ -29,24 +29,24 @@ export class GitHubClient {
     return null;
   }
 
-  async getFileSHA(path: string, branch?:string): Promise<string | null> {
+  async getFileSHA(path: string, branch?: string): Promise<string | null> {
     try {
-        const response = await this.octokit.repos.getContent({
-            owner: this.owner,
-            repo: this.repo,
-            path: path,
-            ref: branch
-        });
+      const response = await this.octokit.repos.getContent({
+        owner: this.owner,
+        repo: this.repo,
+        path: path,
+        ref: branch,
+      });
 
-        if (!Array.isArray(response.data) && response.data.type === "file") {
-            return response.data.sha;
-        }
-        return null;
+      if (!Array.isArray(response.data) && response.data.type === "file") {
+        return response.data.sha;
+      }
+      return null;
     } catch (error: any) {
-        if (error.status === 404) {
-            return null;
-        }
-        throw error;
+      if (error.status === 404) {
+        return null;
+      }
+      throw error;
     }
   }
 
@@ -54,46 +54,48 @@ export class GitHubClient {
     path: string,
     content: string,
     message: string,
-    options?: { 
-        branch?: string; 
-        authorName?: string;
-        authorEmail?: string;
-        authorDate?: string;
+    options?: {
+      branch?: string;
+      authorName?: string;
+      authorEmail?: string;
+      authorDate?: string;
     }
-  ): Promise<{ sha: string, url: string }> {
+  ): Promise<{ sha: string; url: string }> {
     const encodedContent = Buffer.from(content, "utf-8").toString("base64");
     const existingSHA = await this.getFileSHA(path, options?.branch);
 
     const params: any = {
-        owner: this.owner,
-        repo: this.repo,
-        path: path,
-        message,
-        content: encodedContent,
+      owner: this.owner,
+      repo: this.repo,
+      path: path,
+      message,
+      content: encodedContent,
     };
 
     if (existingSHA) {
-        params.sha = existingSHA;
+      params.sha = existingSHA;
     }
 
     if (options?.branch) {
-        params.branch = options.branch;
+      params.branch = options.branch;
     }
 
     if (options?.authorName && options?.authorEmail) {
-        params.committer = {
-            name: options.authorName,
-            email: options.authorEmail,
-        };
-        if (options?.authorDate) {
-            params.committer.date = options.authorDate;
-        }
+      params.committer = {
+        name: options.authorName,
+        email: options.authorEmail,
+      };
+      if (options?.authorDate) {
+        params.committer.date = options.authorDate;
+      }
     }
 
-    const response = await this.octokit.repos.createOrUpdateFileContents(params);
+    const response = await this.octokit.repos.createOrUpdateFileContents(
+      params
+    );
     return {
-        sha: response.data.commit.sha || "",
-        url: response.data.content!.html_url || "",
+      sha: response.data.commit.sha || "",
+      url: response.data.content!.html_url || "",
     };
   }
 
@@ -101,61 +103,67 @@ export class GitHubClient {
     files: Array<{ path: string; content: string }>,
     message: string,
     options?: {
-        branch?: string;
-        authorName?: string;
-        authorEmail?: string;
-        authorDate?: string;
+      branch?: string;
+      authorName?: string;
+      authorEmail?: string;
+      authorDate?: string;
     }
-  ): Promise<{ sha: string}> {
+  ): Promise<{ sha: string }> {
     const branch = options?.branch || "main";
 
     let latestCommitSHA: string;
     let baseTreeSHA: string;
 
     try {
-        const refResponse = await this.octokit.rest.git.getRef({
-            owner: this.owner,
-            repo: this.repo,
-            ref: `heads/${branch}`,
-        });
-        latestCommitSHA = refResponse.data.object.sha;
-        
-        const commitResponse = await this.octokit.rest.git.getCommit({
-            owner: this.owner,
-            repo: this.repo,
-            commit_sha: latestCommitSHA,
-        });
-        baseTreeSHA = commitResponse.data.tree.sha;
+      const refResponse = await this.octokit.rest.git.getRef({
+        owner: this.owner,
+        repo: this.repo,
+        ref: `heads/${branch}`,
+      });
+      latestCommitSHA = refResponse.data.object.sha;
+
+      const commitResponse = await this.octokit.rest.git.getCommit({
+        owner: this.owner,
+        repo: this.repo,
+        commit_sha: latestCommitSHA,
+      });
+      baseTreeSHA = commitResponse.data.tree.sha;
     } catch (error: any) {
-        if (error.status === 404) {
-            throw new Error(`Branch ${branch} does not exist.`);
-        }
-        throw error;
+      if (error.status === 404) {
+        throw new Error(`Branch ${branch} does not exist.`);
+      }
+      throw error;
     }
 
     const FILE_MODE = "100644";
     const treeItems: Array<{
-        path: string;
-        mode: string;
-        type: "blob";
-        sha: string;
+      path: string;
+      mode: string;
+      type: "blob";
+      sha: string;
     }> = [];
 
     for (const file of files) {
-        const blobResponse = await this.octokit.rest.git.createBlob({
-            owner: this.owner,
-            repo: this.repo,
-            content: Buffer.from(file.content, "utf-8").toString("base64"),
-            encoding: "base64",
-        });
+      const blobResponse = await this.octokit.rest.git.createBlob({
+        owner: this.owner,
+        repo: this.repo,
+        content: Buffer.from(file.content, "utf-8").toString("base64"),
+        encoding: "base64",
+      });
 
-        treeItems.push({
-            path: file.path,
-            mode: FILE_MODE,
-            type: "blob",
-            sha: blobResponse.data.sha,
-        });
-
+      treeItems.push({
+        path: file.path,
+        mode: FILE_MODE,
+        type: "blob",
+        sha: blobResponse.data.sha,
+      });
     }
+
+    const treeResponse = await this.octokit.rest.git.createTree({
+      owner: this.owner,
+      repo: this.repo,
+      base_tree: baseTreeSHA,
+      tree: treeItems,
+    });
   }
 }

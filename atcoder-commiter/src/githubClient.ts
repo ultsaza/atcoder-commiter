@@ -27,4 +27,25 @@ export class GitHubClient {
     }
     return null;
   }
+
+  async getFileSHA(path: string, branch?:string): Promise<string | null> {
+    try {
+        const response = await this.octokit.repos.getContent({
+            owner: this.owner,
+            repo: this.repo,
+            path: path,
+            ref: branch
+        });
+
+        if (!Array.isArray(response.data) && response.dateta.type === "file") {
+            return response.data.sha;
+        }
+        return null;
+    } catch (error: any) {
+        if (error.status === 404) {
+            return null;
+        }
+        throw error;
+    }
+  }
 }

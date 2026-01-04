@@ -51,6 +51,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "atcoder-commiter.resetTimestamp",
+        "title": "Reset Timestamp",
+        "category": "AtCoder Commiter"
+      },
+      {
         "command": "atcoder-commiter.setUsername",
         "title": "Set AtCoder Username",
         "category": "AtCoder Commiter"

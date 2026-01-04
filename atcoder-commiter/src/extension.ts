@@ -39,3 +39,12 @@ function updateTreeViewState(): void {
     hasGitHubToken
   );
 }
+
+async function refreshSubmissions(): Promise<void> {
+  const config = vscode.workspace.getConfiguration("atcoder-commiter");
+  const username = config.get<string>("username", "");
+  const repoUrl = config.get<string>("repoUrl", "");
+
+  if (!username) {
+  }
+}

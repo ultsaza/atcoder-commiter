@@ -36,7 +36,7 @@ export class ApiClient {
     if (!codeMatch) {
       throw new Error("Failed to extract code");
     }
-    return codeMatch[1];
+    return decodeHtmlEntities(codeMatch[1]);
   }
 }
 

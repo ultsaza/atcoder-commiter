@@ -164,10 +164,10 @@ export class GitHubClient {
 
     const commitParams: any = {
       owner: this.owner,
-      reop: this.repo,
+      repo: this.repo,
       message,
       tree: treeResponse.data.sha,
-      parents: [latestCommitSHA], 
+      parents: [latestCommitSHA],
     };
 
     if (options?.authorName && options?.authorEmail) {
@@ -217,4 +217,3 @@ export class GitHubClient {
     return response.data.default_branch;
   }
 }
-

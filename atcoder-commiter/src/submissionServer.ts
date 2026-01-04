@@ -45,7 +45,8 @@ export class SubmissionServer {
         const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
         const ext = getLanguageExtension(sub.language);
         const fileName = `${sub.problem_id}${ext}`;
-        const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
+        const basePath = `${sub.contest_id}/${sub.problem_id}/${fileName}`;
+        const filePath = outputDir ? `${outputDir}/${basePath}` : basePath;
 
         const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
         await this.githubClient.createOrUpdateFile(

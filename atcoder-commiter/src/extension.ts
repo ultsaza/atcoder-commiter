@@ -46,5 +46,47 @@ async function refreshSubmissions(): Promise<void> {
   const repoUrl = config.get<string>("repoUrl", "");
 
   if (!username) {
+    vscode.window.showInformationMessage("Please set your AtCoder username");
+    return;
   }
+
+  if (!repoUrl) {
+    vscode.window.showInformationMessage("Please set your repository URL");
+    return;
+  }
+
+  if (!stateManager.hasGitHubToken()) {
+    vscode.window.showInformationMessage("Please set your GitHub token");
+    return;
+  }
+
+  const submissions = await apiClient.getSubmissions(
+    username,
+    stateManager.getLastTimestamp()
+  );
+  stateManager.setLastTimestamp(
+    submissions[submissions.length - 1].epoch_second
+  );
+  submissionTreeProvider.updateSubmissions(submissions);
+}
+
+async function setUsername(): Promise<void> {
+  const config = vscode.workspace.getConfiguration("atcoder-commiter");
+  const currentUsername = config.get<string>("username", "");
+
+  const username = await vscode.window.showInputBox({
+    prompt: "Enter your AtCoder username",
+    value: currentUsername,
+  });
+  if (!username) {
+    return;
+  }
+
+  await config.update(
+    "username",
+    username.trim(),
+    vscode.ConfigurationTarget.Global
+  );
+  updateTreeViewState();
+  vscode.window.showInformationMessage(`Username updated to ${username}`);
 }

@@ -173,6 +173,23 @@ export class GitHubClient {
       tree: treeResponse.data.sha,
       parents: [latestCommitSHA], 
     };
+
+    if (options?.authorName && options?.authorEmail) {
+      commitParams.author = {
+        name: options.authorName,
+        email: options.authorEmail,
+      };
+      if (options.authorDate) {
+        commitParams.author.date = options.authorDate;
+      }
+      commitParams.committer = commitParams.author;
+    }
+
+    const newCommitResponse = await this.octokit.rest.git.createCommit(
+      commitParams
+    );
+
     
+
   }
 }

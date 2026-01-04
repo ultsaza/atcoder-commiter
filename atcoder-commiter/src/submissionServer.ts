@@ -27,4 +27,12 @@ export class SubmissionServer {
 
         this.defaultBranch = await this.githubClient.getDefaultBranch();
     }
+    
+    async saveSubmissions(
+        submissjions: Submission[],
+        outputDir: string,
+        progressCallback?: (current: number, total: number, message?: string) => void
+    ): Promise<void> {
+
+    }
 }

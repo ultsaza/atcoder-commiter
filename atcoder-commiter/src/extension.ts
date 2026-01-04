@@ -90,3 +90,25 @@ async function setUsername(): Promise<void> {
   updateTreeViewState();
   vscode.window.showInformationMessage(`Username updated to ${username}`);
 }
+
+async function setRepo(): Promise<void> {
+  const config = vscode.workspace.getConfiguration("atcoder-commiter");
+  const currentRepoUrl = config.get<string>("repoUrl", "");
+
+  const repoUrl = await vscode.window.showInputBox({
+    prompt: "Enter your archive repository URL",
+    value: currentRepoUrl,
+    placeHolder: "Example: https://github.com/username/archive.git",
+  });
+  if (!repoUrl) {
+    return;
+  }
+
+  await config.update(
+    "repoUrl",
+    repoUrl.trim(),
+    vscode.ConfigurationTarget.Global
+  );
+  updateTreeViewState();
+  vscode.window.showInformationMessage(`Repository URL updated to ${repoUrl}`);
+}

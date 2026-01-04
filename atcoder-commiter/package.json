@@ -1,8 +1,9 @@
 {
   "name": "atcoder-commiter",
-  "displayName": "atcoder-commiter",
-  "description": "",
+  "displayName": "AtCoder Commiter",
+  "description": "Automatically save your AtCoder submissions to GitHub",
   "version": "0.0.1",
+  "publisher": "your-publisher-name",
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -12,12 +13,82 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "atcoder-commiter",
+          "title": "AtCoder Commiter",
+          "icon": "$(code)"
+        }
+      ]
+    },
+    "views": {
+      "atcoder-commiter": [
+        {
+          "id": "atcoder-commiter.submissions",
+          "name": "Submissions",
+          "contextualTitle": "AtCoder Submissions"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "atcoder-commiter.submissions",
+        "contents": "Welcome to AtCoder Commiter!\n\n[Set AtCoder Username](command:atcoder-commiter.setUsername)\n[Set Repository URL](command:atcoder-commiter.setRepo)\n[Set GitHub Token](command:atcoder-commiter.setGitHubToken)\n\nAfter configuration, click Refresh to fetch submissions.\n[Refresh Submissions](command:atcoder-commiter.refresh)"
+      }
+    ],
     "commands": [
       {
-        "command": "atcoder-commiter.helloWorld",
-        "title": "Hello World"
+        "command": "atcoder-commiter.refresh",
+        "title": "Refresh Submissions",
+        "category": "AtCoder Commiter",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "atcoder-commiter.setUsername",
+        "title": "Set AtCoder Username",
+        "category": "AtCoder Commiter"
+      },
+      {
+        "command": "atcoder-commiter.setRepo",
+        "title": "Set Repository URL",
+        "category": "AtCoder Commiter"
+      },
+      {
+        "command": "atcoder-commiter.setGitHubToken",
+        "title": "Set GitHub Token",
+        "category": "AtCoder Commiter"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "atcoder-commiter.refresh",
+          "when": "view == atcoder-commiter.submissions",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AtCoder Commiter",
+      "properties": {
+        "atcoder-commiter.username": {
+          "type": "string",
+          "default": "",
+          "description": "Your AtCoder username"
+        },
+        "atcoder-commiter.repoUrl": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub repository URL for saving submissions (e.g., https://github.com/username/atcoder-archive)"
+        },
+        "atcoder-commiter.outputDir": {
+          "type": "string",
+          "default": "",
+          "description": "Output directory path in the repository (leave empty for root)"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -32,6 +103,10 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "@octokit/rest": "^21.0.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.107.0",

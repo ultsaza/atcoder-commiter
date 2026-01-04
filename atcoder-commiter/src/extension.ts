@@ -47,10 +47,16 @@ export function activate(context: vscode.ExtensionContext) {
     setGitHubToken
   );
 
+  const resetTimestampCommand = vscode.commands.registerCommand(
+    "atcoder-commiter.resetTimestamp",
+    resetTimestamp
+  );
+
   context.subscriptions.push(refreshCommand);
   context.subscriptions.push(setUsernameCommand);
   context.subscriptions.push(setRepoCommand);
   context.subscriptions.push(setGitHubTokenCommand);
+  context.subscriptions.push(resetTimestampCommand);
 }
 
 function updateTreeViewState(): void {
@@ -209,6 +215,12 @@ async function setGitHubToken(): Promise<void> {
   await stateManager.setGitHubToken(token.trim());
   updateTreeViewState();
   vscode.window.showInformationMessage("GitHub token has been saved securely.");
+}
+
+async function resetTimestamp(): Promise<void> {
+  await stateManager.resetTimestamp();
+  updateTreeViewState();
+  vscode.window.showInformationMessage("Timestamp has been reset.");
 }
 
 export function deactivate() {}

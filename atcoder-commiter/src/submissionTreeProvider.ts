@@ -83,4 +83,21 @@ export class SubmissionTreeProvider
       )
     );
   }
+
+  getWelcomeMessage(): string {
+    const messages: string[] = [];
+    if (!this.hasGitHubToken) {
+      messages.push("Please set your GitHub token.");
+    }
+    if (!this.repoUrl) {
+      messages.push("Please set your repository URL.");
+    }
+    if (!this.username) {
+      messages.push("Please set your AtCoder username.");
+    }
+    if (this.username && this.repoUrl && this.hasGitHubToken) {
+      messages.push("Ready to commit!");
+    }
+    return messages.join("\n");
+  }
 }

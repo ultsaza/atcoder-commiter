@@ -29,15 +29,12 @@ export class SubmissionServer {
     }
     
     async saveSubmissions(
-        submissjions: Submission[],
+        submission: Submission[],
         outputDir: string,
         progressCallback?: (current: number, total: number, message?: string) => void
     ): Promise<void> {
         if (!this.githubClient) {
             throw new Error("GitHub client is not initialized");
         }
-
-        let savedCount = 0;
-        const totalSubmissions = submissjions.length;
     }
 }

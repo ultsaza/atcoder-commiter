@@ -1,7 +1,6 @@
 import { Submission, getLanguageExtension } from "./types";
 import { apiClient } from "./api";
 import { GitHubClient } from "./githubClient.mjs";
-import("./githubClient.mjs");
 
 function formatDate(epochSecond: number): string {
     const date = new Date(epochSecond * 1000);
@@ -54,7 +53,6 @@ export class SubmissionServer {
                         authorDate: new Date(sub.epoch_second * 1000).toISOString(),
                     }
                 );
-
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             } catch (error) {
                 console.error(error);

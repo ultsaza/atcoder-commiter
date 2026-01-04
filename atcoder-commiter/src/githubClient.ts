@@ -1,6 +1,4 @@
 import { Octokit } from "@octokit/rest";
-import { FILE } from "dns";
-import { StringLiteral } from "typescript";
 
 export class GitHubClient {
   private octokit: Octokit;
@@ -135,10 +133,9 @@ export class GitHubClient {
       throw error;
     }
 
-    const FILE_MODE = "100644";
     const treeItems: Array<{
       path: string;
-      mode: string;
+      mode: "100644";
       type: "blob";
       sha: string;
     }> = [];
@@ -153,7 +150,7 @@ export class GitHubClient {
 
       treeItems.push({
         path: file.path,
-        mode: FILE_MODE,
+        mode: "100644",
         type: "blob",
         sha: blobResponse.data.sha,
       });

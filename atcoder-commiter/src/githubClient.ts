@@ -49,4 +49,44 @@ export class GitHubClient {
     }
   }
 
+  async createOrUpdateFile(
+    path: string,
+    content: string,
+    message: string,
+    options?: { 
+        branch?: string; 
+        authorName?: string;
+        authorEmail?: string;
+        authorDate?: string;
+    }
+  ): Promise<{ sha: string, url: string }> {
+    const encodedContent = Buffer.from(content, "utf-8").toString("base64");
+    const existingSHA = await this.getFileSHA(path, options?.branch);
+
+    const params: any = {
+        owner: this.owner,
+        repo: this.repo,
+        path: path,
+        message,
+        content: encodedContent,
+    };
+
+    if (existingSHA) {
+        params.sha = existingSHA;
+    }
+
+    if (options?.branch) {
+        params.branch = options.branch;
+    }
+
+    if (options?.authorName && options?.authorEmail) {
+        params.committer = {
+            name: options.committerName,
+            email: options.committerEmail,
+        };
+        if (options?.authorDate) {
+            params.committer.date = options.authorDate;
+        }
+    }
+  }
 }

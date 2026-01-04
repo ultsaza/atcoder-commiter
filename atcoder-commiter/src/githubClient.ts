@@ -78,13 +78,15 @@ export class GitHubClient {
     }
 
     if (options?.authorName && options?.authorEmail) {
-      params.committer = {
+      const authorInfo: { name: string; email: string; date?: string } = {
         name: options.authorName,
         email: options.authorEmail,
       };
       if (options?.authorDate) {
-        params.committer.date = options.authorDate;
+        authorInfo.date = options.authorDate;
       }
+      params.author = authorInfo;
+      params.committer = authorInfo;
     }
 
     const response = await this.octokit.repos.createOrUpdateFileContents(

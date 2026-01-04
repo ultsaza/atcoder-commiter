@@ -111,29 +111,38 @@ async function refreshSubmissions(): Promise<void> {
         await saver.initGitHubClient(token, repoUrl);
 
         progress.report({ message: "Fetching submissions..." });
-        const submissions = await apiClient.getSubmissions(
+        const allSubmissions = await apiClient.getSubmissions(
           username,
           fromSecond
         );
 
+        // Filter to only AC (Accepted) submissions
+        const submissions = allSubmissions.filter((sub) => sub.result === "AC");
+
         if (submissions.length === 0) {
-          progress.report({ message: "No new submissions found" });
+          vscode.window.showInformationMessage(
+            allSubmissions.length > 0
+              ? `Found ${allSubmissions.length} submissions, but none were AC`
+              : "No new submissions found"
+          );
           return;
         }
 
-        progress.report({ message: "Processing submissions..." });
+        progress.report({
+          message: `Processing ${submissions.length} AC submissions...`,
+        });
 
         submissionTreeProvider.updateSubmissions(submissions);
 
         await saver.saveSubmissions(submissions, outputDir);
 
-        const lastSubmission = submissions[submissions.length - 1];
+        const lastSubmission = allSubmissions[allSubmissions.length - 1];
         await stateManager.setLastTimestamp(lastSubmission.epoch_second);
 
         updateTreeViewState();
 
         vscode.window.showInformationMessage(
-          "Submissions refreshed successfully"
+          `${submissions.length} AC submission(s) committed successfully`
         );
       } catch (error) {
         console.error("Failed to refresh submissions:", error);

@@ -89,7 +89,12 @@ async function refreshSubmissions(): Promise<void> {
         progress.report({ message: "No new submissions found" });
         return;
       }
+
       progress.report({ message: "Processing submissions..." });
+
+      submissionTreeProvider.updateSubmissions(submissions);
+
+      await saver.saveSubmissions(submissions, outputDir);
     }
   );
 }

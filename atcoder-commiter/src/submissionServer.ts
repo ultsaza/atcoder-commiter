@@ -1,65 +1,68 @@
 import { Submission, getLanguageExtension } from "./types";
 import { apiClient } from "./api";
-import { GitHubClient } from "./githubClient.mjs";
+import { GitHubClient } from "./githubClient";
 
 function formatDate(epochSecond: number): string {
-    const date = new Date(epochSecond * 1000);
-    return date.toISOString().replace(/:/g, "-").replace(/\.\d{3}Z$/, "");
+  const date = new Date(epochSecond * 1000);
+  return date
+    .toISOString()
+    .replace(/:/g, "-")
+    .replace(/\.\d{3}Z$/, "");
 }
 
 export class SubmissionServer {
-    private githubClient: GitHubClient | null = null;
-    private defaultBranch: string | null = "main";
-    
-    async initGitHubClient(token: string, repoUrl: string): Promise<void> {
-        const parsed = GitHubClient.parseRepoUrl(repoUrl);
-        if (!parsed) {
-            throw new Error("Invalid repo URL");
-        }
+  private githubClient: GitHubClient | null = null;
+  private defaultBranch: string | null = "main";
 
-        this.githubClient = new GitHubClient(token, parsed.owner, parsed.repo);
-
-        const exists = await this.githubClient.checkRepo();
-        if (!exists) {
-            throw new Error("Repository does not exist or access is denied");
-        }
-
-        this.defaultBranch = await this.githubClient.getDefaultBranch();
+  async initGitHubClient(token: string, repoUrl: string): Promise<void> {
+    const parsed = GitHubClient.parseRepoUrl(repoUrl);
+    if (!parsed) {
+      throw new Error("Invalid repo URL");
     }
-    
-    async saveSubmissions(
-        submission: Submission[],
-        outputDir: string,
-    ): Promise<void> {
-        if (!this.githubClient) {
-            throw new Error("GitHub client is not initialized");
-        }
-        for (const sub of submission) {
-            if (sub.result !== "AC") {
-                continue;
-            }
-            try {
-                const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
-                const ext = getLanguageExtension(sub.language);
-                const fileName = `${sub.problem_id}${ext}`;
-                const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
 
-                const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
-                await this.githubClient.createOrUpdateFile(
-                    filePath,
-                    code,
-                    commitMessage,
-                    {
-                        branch: this.defaultBranch || undefined,
-                        authorName: "AtCoder Commiter",
-                        authorEmail: "AtCoder-Commiter@user.noreply.github.com",
-                        authorDate: new Date(sub.epoch_second * 1000).toISOString(),
-                    }
-                );
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-            } catch (error) {
-                console.error(error);
-            }
-        }
+    this.githubClient = new GitHubClient(token, parsed.owner, parsed.repo);
+
+    const exists = await this.githubClient.checkRepo();
+    if (!exists) {
+      throw new Error("Repository does not exist or access is denied");
     }
+
+    this.defaultBranch = await this.githubClient.getDefaultBranch();
+  }
+
+  async saveSubmissions(
+    submission: Submission[],
+    outputDir: string
+  ): Promise<void> {
+    if (!this.githubClient) {
+      throw new Error("GitHub client is not initialized");
+    }
+    for (const sub of submission) {
+      if (sub.result !== "AC") {
+        continue;
+      }
+      try {
+        const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
+        const ext = getLanguageExtension(sub.language);
+        const fileName = `${sub.problem_id}${ext}`;
+        const filePath = `${outputDir}/${sub.contest_id}/${sub.problem_id}/${fileName}`;
+
+        const commitMessage = `[${sub.contest_id}] ${sub.problem_id}`;
+        await this.githubClient.createOrUpdateFile(
+          filePath,
+          code,
+          commitMessage,
+          {
+            branch: this.defaultBranch || undefined,
+            authorName: "AtCoder Commiter",
+            authorEmail: "AtCoder-Commiter@user.noreply.github.com",
+            authorDate: new Date(sub.epoch_second * 1000).toISOString(),
+          }
+        );
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
 }

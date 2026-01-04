@@ -31,10 +31,17 @@ export class SubmissionServer {
     async saveSubmissions(
         submission: Submission[],
         outputDir: string,
-        progressCallback?: (current: number, total: number, message?: string) => void
     ): Promise<void> {
         if (!this.githubClient) {
             throw new Error("GitHub client is not initialized");
+        }
+        for (const sub of submission) {
+            try {
+                const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
+                const ext = getLanguageExtension(sub.language);
+                const dateStr = formatDate(sub.epoch_second);
+                const fileName = `${sub.problem_id}_${dateStr}${ext}`;
+            }     
         }
     }
 }

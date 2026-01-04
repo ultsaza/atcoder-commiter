@@ -81,8 +81,8 @@ export class GitHubClient {
 
     if (options?.authorName && options?.authorEmail) {
         params.committer = {
-            name: options.committerName,
-            email: options.committerEmail,
+            name: options.authorName,
+            email: options.authorEmail,
         };
         if (options?.authorDate) {
             params.committer.date = options.authorDate;

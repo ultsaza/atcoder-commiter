@@ -88,5 +88,11 @@ export class GitHubClient {
             params.committer.date = options.authorDate;
         }
     }
+
+    const response = await this.octokit.repos.createOrUpdateFileContents(params);
+    return {
+        sha: response.data.commit.sha || "",
+        url: response.data.content!.html_url || "",
+    };
   }
 }

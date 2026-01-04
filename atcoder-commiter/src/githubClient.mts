@@ -1,5 +1,4 @@
 import { Octokit } from "@octokit/rest";
-
 export class GitHubClient {
   private octokit: Octokit;
   private owner: string;

@@ -4,13 +4,17 @@ import { StateManager } from "./stateManager";
 import { SubmissionServer } from "./submissionServer";
 import { SubmissionTreeProvider } from "./submissionTreeProvider";
 
+
+let stateManager: StateManager;
+let submissionTreeProvider: SubmissionTreeProvider;
+
 export function activate(context: vscode.ExtensionContext) {
   console.log(
     'Congratulations, your extension "atcoder-commiter" is now active!'
   );
 
-  const stateManager = new StateManager(context);
-  const submissionTreeProvider = new SubmissionTreeProvider();
+  stateManager = new StateManager(context);
+  submissionTreeProvider = new SubmissionTreeProvider();
 
   stateManager.loadGitHubToken();
 
@@ -23,4 +27,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-export function deactivate() {}
+function updateTreeViewState(): void {
+	const config = vscode.workspace.getConfiguration("atcoder-commiter");
+	const username = config.get<string>("username");
+	const lastTimestamp = config.get<number>("lastTimestamp");
+	const repoUrl = stateManager.getRepoUrl();
+	const hasGitHubToken = 
+}

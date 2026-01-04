@@ -46,4 +46,8 @@ export class StateManager {
       await this.context.globalState.update(STATE_KEY_HAS_GITHUB_TOKEN, true);
     }
   }
+
+  async resetTimestamp(): Promise<void> {
+    await this.context.globalState.update(STATE_KEY_LAST_TIMESTAMP, 0);
+  }
 }

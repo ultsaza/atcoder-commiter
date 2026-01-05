@@ -1,3 +1,4 @@
-# atcoder-commiter
+# AtCoder Committer
 
-# f
+A tool to archive your AtCoder submissions 
+to a remote Git repository.

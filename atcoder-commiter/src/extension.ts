@@ -181,7 +181,7 @@ async function refreshSubmissions(): Promise<void> {
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: "Refreshing submissions...",
+      title: "",
       cancellable: false,
     },
     async (progress) => {

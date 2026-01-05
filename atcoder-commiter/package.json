@@ -33,8 +33,8 @@
     },
     "viewsWelcome": [
       {
-        "view": "atcoder-commiter.submissions",
-        "contents": "Welcome to AtCoder Commiter!\n\n[Login to GitHub](command:atcoder-commiter.login)\n[Set AtCoder Username](command:atcoder-commiter.setUsername)\n[Select Repository](command:atcoder-commiter.selectRepo)\n\nAfter configuration, click Refresh to fetch submissions.\n[Refresh Submissions](command:atcoder-commiter.refresh)"
+      "view": "atcoder-commiter.submissions",
+      "contents": "Welcome to AtCoder Commiter!\n\n[Login to GitHub](command:atcoder-commiter.login)\n[Set AtCoder Username](command:atcoder-commiter.setUsername)\n[Select Archive Repository](command:atcoder-commiter.selectRepo)\n\nAfter configuration, click the $(sync) button in the title bar to fetch submissions."
       }
     ],
     "commands": [

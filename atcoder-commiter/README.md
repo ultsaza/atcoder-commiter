@@ -35,3 +35,6 @@ this project is inspired by procon-gardener.
 - [AtCoder Problems](https://github.com/kenkoooo/AtCoderProblems/blob/master/doc/api.md) by kenkoooo
 
 this project uses AtCoder Problems API to fetch submission data.
+
+## License
+[MIT License](./LICENSE) @ultsaza

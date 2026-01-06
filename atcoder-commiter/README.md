@@ -1,6 +1,10 @@
-# AtCoder Committer
+<div align="center">
+<img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/icon.png" width="200"/>
+<h1>AtCoder Commiter</h1>
+</div>
 
-A tool to archive your AtCoder accepted submissions to a remote Git repository.
+
+A tool to **archive your AtCoder accepted submissions** to a remote Git repository.
 
 VSCode extension using GitHub API
 

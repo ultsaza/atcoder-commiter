@@ -4,12 +4,10 @@
 </div>
 
 <p align="center">
-<a href="./README.md">English</a> | <a href="./README_ja.md">日本語</a>
+<a href="https://github.com/ultsaza/atcoder-commiter/blob/master/atcoder-commiter/README.md">English</a> | <a href="https://github.com/ultsaza/atcoder-commiter/blob/master/atcoder-commiter/README_ja.md">日本語</a>
 </p>
 
-**AtCoderのAC提出をリモートGitリポジトリにアーカイブする**ツールです。
-
-GitHub APIを使用しているVSCode拡張機能
+**AtCoderのAC提出をリモートGitリポジトリにアーカイブする**vscode拡張機能です。
 
 ## デモ
 <div align="center">

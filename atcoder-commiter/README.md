@@ -1,8 +1,12 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/icon.png" width="200"/>
     <h1>AtCoder Commiter</h1>
+    
 </div>
 
+<p align="center">
+<a href="./README.md">English</a> | <a href="./README_ja.md">日本語</a>
+</p>
 
 A tool to **archive your AtCoder accepted submissions** to a remote Git repository.
 
@@ -27,9 +31,7 @@ https://github.com/user-attachments/assets/184f7445-5401-4c98-b572-7646e49be8f5
 <img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/add_readme.png" alt="Create Repository" width="600"/>
 </p>
 
-
-2. After configuring the extension(Login to GitHub, Set Repository and Set your AtCoder username), 
-click the "Refresh Submissions" button in the VSCode sidebar to fetch and archive your submissions.
+2. From the VSCode sidebar, click the extension badge (the `<<` icon), complete the setup (sign in to GitHub, set the repository, and set your AtCoder username), then click the "Refresh Submissions" button in the VSCode sidebar to fetch and archive your submissions.
 
 3. By regularly clicking the "Refresh Submissions" button, you can continuously archive your progress and efforts on GitHub🎉.
 

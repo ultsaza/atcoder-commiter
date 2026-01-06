@@ -42,15 +42,21 @@ export class SubmissionServer {
 
   async saveSubmissions(
     submission: Submission[],
-    outputDir: string
+    outputDir: string,
+    onProgress?: (current: number, total: number, sub: Submission) => void
   ): Promise<void> {
     if (!this.githubClient) {
       throw new Error("GitHub client is not initialized");
     }
-    for (const sub of submission) {
-      if (sub.result !== "AC") {
-        continue;
-      }
+
+    const acSubmissions = submission.filter((sub) => sub.result === "AC");
+    const total = acSubmissions.length;
+    let current = 0;
+
+    for (const sub of acSubmissions) {
+      current++;
+      onProgress?.(current, total, sub);
+
       try {
         const code = await apiClient.getSubmissionCode(sub.contest_id, sub.id);
         const ext = getLanguageExtension(sub.language);

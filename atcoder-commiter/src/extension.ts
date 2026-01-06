@@ -228,7 +228,11 @@ async function refreshSubmissions(): Promise<void> {
 
         submissionTreeProvider.updateSubmissions(submissions);
 
-        await saver.saveSubmissions(submissions, outputDir);
+        await saver.saveSubmissions(submissions, outputDir, (current, total, sub) => {
+          progress.report({
+            message: `Processing submissions (${current}/${total}): ${sub.problem_id}`,
+          });
+        });
 
         const lastSubmission = allSubmissions[allSubmissions.length - 1];
         await stateManager.setLastTimestamp(lastSubmission.epoch_second + 1);

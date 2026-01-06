@@ -1,9 +1,5 @@
 # Change Log
 
-All notable changes to the "atcoder-commiter" extension will be documented in this file.
+## 1.0.0 (2026-01-06)
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Initial release of AtCoder Commiter. A VSCode extension to archive your AtCoder accepted submissions to a remote Git repository using GitHub API.

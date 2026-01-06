@@ -2,7 +2,7 @@
   "name": "atcoder-commiter",
   "displayName": "AtCoder Commiter",
   "description": "Automatically save your AtCoder submissions to GitHub",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "icon": "./images/icon.png",
   "publisher": "ultsaza",
   "repository": {

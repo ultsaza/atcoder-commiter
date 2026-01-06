@@ -190,6 +190,13 @@ async function refreshSubmissions(): Promise<void> {
         const saver = new SubmissionServer();
         await saver.initGitHubClient(token, repoUrl);
 
+        // Get authenticated user info for commit author
+        const userInfo = await GitHubClient.getAuthenticatedUser(token);
+        saver.setAuthor({
+          name: userInfo.name || userInfo.login,
+          email: userInfo.email,
+        });
+
         progress.report({ message: "Fetching submissions..." });
         const allSubmissions = await apiClient.getSubmissions(
           username,

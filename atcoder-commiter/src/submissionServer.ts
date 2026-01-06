@@ -10,9 +10,19 @@ function formatDate(epochSecond: number): string {
     .replace(/\.\d{3}Z$/, "");
 }
 
+export interface CommitAuthor {
+  name: string;
+  email: string;
+}
+
 export class SubmissionServer {
   private githubClient: GitHubClient | null = null;
   private defaultBranch: string | null = "main";
+  private author: CommitAuthor | null = null;
+
+  setAuthor(author: CommitAuthor): void {
+    this.author = author;
+  }
 
   async initGitHubClient(token: string, repoUrl: string): Promise<void> {
     const parsed = GitHubClient.parseRepoUrl(repoUrl);
@@ -57,8 +67,8 @@ export class SubmissionServer {
           commitMessage,
           {
             branch: this.defaultBranch || undefined,
-            authorName: "AtCoder Commiter",
-            authorEmail: "AtCoder-Commiter@user.noreply.github.com",
+            authorName: this.author?.name || "AtCoder Commiter",
+            authorEmail: this.author?.email || "AtCoder-Commiter@user.noreply.github.com",
             authorDate: new Date(sub.epoch_second * 1000).toISOString(),
           }
         );

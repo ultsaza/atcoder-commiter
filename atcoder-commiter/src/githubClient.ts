@@ -69,16 +69,24 @@ export class GitHubClient {
    */
   static async getAuthenticatedUser(
     token: string
-  ): Promise<{ login: string; name: string | null }> {
+  ): Promise<{ login: string; name: string | null; email: string }> {
     const octokit = new Octokit({
       auth: token,
       userAgent: "atcoder-commiter-vscode-extension/1.0.0",
     });
 
     const response = await octokit.users.getAuthenticated();
+    const login = response.data.login;
+    const id = response.data.id;
+
+    // Use GitHub's noreply email format to ensure contributions are counted
+    // Format: <id>+<username>@users.noreply.github.com
+    const email = `${id}+${login}@users.noreply.github.com`;
+
     return {
-      login: response.data.login,
+      login,
       name: response.data.name,
+      email,
     };
   }
 

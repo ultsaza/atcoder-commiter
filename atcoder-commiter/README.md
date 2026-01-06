@@ -8,6 +8,14 @@ A tool to **archive your AtCoder accepted submissions** to a remote Git reposito
 
 VSCode extension using GitHub API
 
+## Demo
+<div align="center">
+
+https://github.com/user-attachments/assets/184f7445-5401-4c98-b572-7646e49be8f5
+
+</div>
+
+
 ## Usage
 
 1. Create or Select a GitHub repository where you want to archive your AtCoder submissions.

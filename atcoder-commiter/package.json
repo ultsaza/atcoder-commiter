@@ -22,7 +22,7 @@
         {
           "id": "atcoder-commiter",
           "title": "AtCoder Commiter",
-          "icon": "$(code)"
+          "icon": "./images/icon.svg"
         }
       ]
     },

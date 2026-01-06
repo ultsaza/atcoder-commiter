@@ -1,6 +1,6 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/icon.png" width="200"/>
-<h1>AtCoder Commiter</h1>
+    <img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/icon.png" width="200"/>
+    <h1>AtCoder Commiter</h1>
 </div>
 
 

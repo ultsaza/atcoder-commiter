@@ -4,6 +4,10 @@
   "description": "Automatically save your AtCoder submissions to GitHub",
   "version": "0.0.1",
   "publisher": "ultsaza",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ultsaza/atcoder-commiter"
+  },
   "engines": {
     "vscode": "^1.107.0"
   },

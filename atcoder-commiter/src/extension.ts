@@ -178,14 +178,21 @@ async function refreshSubmissions(): Promise<void> {
   const outputDir = config.get<string>("outputDir", "");
   const fromSecond = stateManager.getLastTimestamp();
 
-  await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      title: "",
-      cancellable: false,
-    },
-    async (progress) => {
-      try {
+  // Disable refresh button while running
+  await vscode.commands.executeCommand(
+    "setContext",
+    "atcoder-commiter.isRefreshing",
+    true
+  );
+
+  try {
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "",
+        cancellable: false,
+      },
+      async (progress) => {
         progress.report({ message: "Connecting to GitHub..." });
         const saver = new SubmissionServer();
         await saver.initGitHubClient(token, repoUrl);
@@ -231,12 +238,19 @@ async function refreshSubmissions(): Promise<void> {
         vscode.window.showInformationMessage(
           `${submissions.length} AC submission(s) committed successfully`
         );
-      } catch (error) {
-        console.error("Failed to refresh submissions:", error);
-        vscode.window.showErrorMessage("Failed to refresh submissions");
       }
-    }
-  );
+    );
+  } catch (error) {
+    console.error("Failed to refresh submissions:", error);
+    vscode.window.showErrorMessage("Failed to refresh submissions");
+  } finally {
+    // Re-enable refresh button
+    await vscode.commands.executeCommand(
+      "setContext",
+      "atcoder-commiter.isRefreshing",
+      false
+    );
+  }
 }
 
 async function setUsername(): Promise<void> {

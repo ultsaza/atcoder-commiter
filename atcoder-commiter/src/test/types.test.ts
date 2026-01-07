@@ -9,6 +9,25 @@ suite("Types Test Suite", () => {
       assert.strictEqual(getLanguageExtension("C++17 (Clang 10.0.0)"), ".cpp");
     });
 
+    test("should return .c for C languages", () => {
+      assert.strictEqual(getLanguageExtension("C (GCC 12.2.0)"), ".c");
+      assert.strictEqual(getLanguageExtension("C (Clang 16.0.6)"), ".c");
+    });
+
+    test("should return .cs for C# languages", () => {
+      assert.strictEqual(getLanguageExtension("C# 11.0 (.NET 7.0.7)"), ".cs");
+      assert.strictEqual(getLanguageExtension("C# (.NET Core 3.1.201)"), ".cs");
+    });
+
+    test("should correctly distinguish between C, C++, and C#", () => {
+      // C++ should not match C
+      assert.strictEqual(getLanguageExtension("C++ (GCC12)"), ".cpp");
+      // C should not match C++ or C#
+      assert.strictEqual(getLanguageExtension("C (GCC12)"), ".c");
+      // C# should not match C or C++
+      assert.strictEqual(getLanguageExtension("C# (Mono)"), ".cs");
+    });
+
     test("should return .py for Python languages", () => {
       assert.strictEqual(getLanguageExtension("Python (3.8.2)"), ".py");
       assert.strictEqual(getLanguageExtension("Python (PyPy 7.3.0)"), ".py");

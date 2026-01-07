@@ -12,15 +12,39 @@ export interface Submission {
 }
 
 export const LANGUAGE_EXTENSIONS: Record<string, string> = {
-  // TODO: fill Record
+  "><>": ".fish",
+  "Assembly": ".asm",
+  "C": ".c",
+  "C#": ".cs",
   "C++": ".cpp",
-  Python: ".py",
-  Rust: ".rs",
+  "D": ".d",
+  "Erlang": ".erl",
+  "Fortran": ".f90",
+  "Go": ".go",
+  "Haskell": ".hs",
+  "Java": ".java",
+  "JavaScript": ".js",
+  "Julia": ".jl",
+  "Kotlin": ".kt",
+  'Nim': '.nim',
+  "OCaml": ".ml",
+  "Pascal": ".pas",
+  "Perl": ".pl",
+  "PHP": ".php",
+  "Python": ".py",
+  "Ruby": ".rb",
+  "Rust": ".rs",
+  "Scala": ".scala",
+  "Swift": ".swift",
+  "TypeScript": ".ts",
 };
 
 export function getLanguageExtension(language: string): string {
-  for (const [k, v] of Object.entries(LANGUAGE_EXTENSIONS)) {
-    if (language.startsWith(k)) {
+  const sortedEntries = Object.entries(LANGUAGE_EXTENSIONS).sort(
+    ([a], [b]) => b.length - a.length
+  );
+  for (const [k, v] of sortedEntries) {
+    if (language.startsWith(k) && (language.length === k.length || language[k.length] === " ")) {
       return v;
     }
   }

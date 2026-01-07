@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.0.3 (2026-01-07)
+
+- Fixed a bug in language extension detection for certain programming languages.
+  
 ## 1.0.2 (2026-01-07)
 
 - Updated some links in README files.

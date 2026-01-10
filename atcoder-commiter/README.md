@@ -1,7 +1,9 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/ultsaza/atcoder-commiter/refs/heads/master/atcoder-commiter/images/icon.png" width="200"/>
     <h1>AtCoder Commiter</h1>
-    
+    <a href="https://marketplace.visualstudio.com/items?itemName=ultsaza.atcoder-commiter">
+        <img src="https://img.shields.io/visual-studio-marketplace/d/ultsaza.atcoder-commiter?style=flat-square&logo=visual-studio-code" alt="Downloads">
+    </a>
 </div>
 
 <p align="center">
